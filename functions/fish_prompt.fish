@@ -25,18 +25,25 @@ function fish_prompt
     set -p kube_ctx (set_color $kube_ctx_col)
     set -a kube_ctx (set_color normal)
 
-
     # Get git branch
     set -l git_branch (git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/')
 
+    # If git is dirty then make branch red
+    if git_is_dirty
+        set -p git_branch (set_color red)
+        set -a git_branch (set_color normal)
+    else
+        set -p git_branch (set_color green)
+        set -a git_branch (set_color normal)
+    end
 
-    # Get suffix
+    # Set prompt suffix
     set -l suffix ">"
 
+    # If user is root, set suffix to #
     if test $USER = root
         set suffix "#"
     end
-
 
     # Build prompt string
     if test -n kube_ctx
@@ -54,7 +61,6 @@ function fish_prompt
     end
 
     set -a prompt_str $suffix ' '
-
 
     echo -n -s $prompt_str
 end   
