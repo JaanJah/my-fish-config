@@ -26,7 +26,7 @@ function fish_prompt
     set -a kube_ctx (set_color normal)
 
     # Get git branch
-    set -l git_branch (git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/')
+    set -l git_branch ( git_branch_name )
 
     # If git is dirty then make branch red
     if git_is_dirty
@@ -57,7 +57,7 @@ function fish_prompt
     set -a prompt_str ' ' (prompt_pwd)
 
     if test -n git_branch
-        set -a prompt_str $git_branch ' '
+        set -a prompt_str ' (' $git_branch ') '
     end
 
     set -a prompt_str $suffix ' '
